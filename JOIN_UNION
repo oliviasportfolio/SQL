@@ -1,4 +1,4 @@
---SQL JOINS - constructing relationship between objects
+--SQL JOINS - constructing relationship between objects or combine two or more records from different tables.
 
 USE bookstore;
 
