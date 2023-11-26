@@ -1,0 +1,80 @@
+--SQL JOINS
+
+USE bookstore;
+
+-- INNER JOIN
+SELECT o.itemid, c.customername
+FROM orderinfo AS o
+INNER JOIN customer AS c ON o.customerid = c.customerid;
+
+-- join both items and author table to retrieve book title and author name
+-- first look at both tables and see what fields they have in common, and identify fields i want to retrieive. Mutually shared field = authorid
+
+SELECT  i.booktitle, a.authorname
+FROM author AS a
+INNER JOIN item AS i ON a.authorid = i.authorid;
+
+-- LEFT JOIN: returns all rows from the left table and the matching rows in the right table
+-- Return all booktitles and their respective authors
+SELECT i.booktitle, a.authorname
+FROM item AS i
+LEFT JOIN author AS a ON a.authorid = i.authorid
+ORDER BY i.booktitle;
+
+-- Return all customers from customer table and the matching orders items from orders table
+SELECT c.customername, o.itemid
+FROM customer AS c
+LEFT JOIN orderinfo AS o ON c.customerid = o.customerid
+ORDER BY c.customername;
+
+-- RIGHT JOIN: return all right table and matches from the left table (if left table doesnt have a value, itll be null)
+-- pull all customers and any matching order item id
+SELECT o.itemid, c.customername
+FROM orderinfo AS o
+RIGHT JOIN customer AS c ON o.customerid=c.customerid
+ORDER BY c.customername;
+
+-- Pull book title from item table and return author name on left hand side
+SELECT a.authorname, i.booktitle
+FROM author AS a
+RIGHT JOIN item AS i ON a.authorid = i.authorid
+ORDER BY a.authorname;
+
+-- SELF JOIN: Table joins to self. Used when the table needs to reference data in itself.
+-- Each employee has manager id that points to employee thats the mgr of employee
+
+SELECT e.firstname A S employeename, em.firstname AS Managername
+FROM employees e
+INNER JOIN employees em ON e.managerid=em.employeeid
+
+--CROSS JOIN - all results from both tables returned - the rows of one table multiplies rows with the other table.
+SELECT * 
+FROM item
+CROSS JOIN author;
+
+-- Which join do you use if you want to pull all of author name in author table and item book title if they're matched in both table?
+SELECT a.authorname, i.booktitle
+FROM author a
+INNER JOIN item i ON a.authorid = i.authorid
+
+-- UNION  combine results of 2 or more select statement by the distinct/unique value
+-- Select city name from two tables (each table have duplicate values)
+SELECT * FROM customer;
+SELECT * FROM supplier;
+
+SELECT city FROM customer
+UNION
+SELECT city FROM supplier
+ORDER BY city;
+
+-- UNION ALL will bring all results of data set even if there are duplicate values
+SELECT city FROM customer
+UNION ALL
+SELECT city FROM supplier
+ORDER BY city;
+
+-- bring all distinct name in customer and employee table - bring only unique names
+SELECT customername FROM customer 
+UNION  
+SELECT firstname FROM employees
+ORDER by customername;
