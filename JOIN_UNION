@@ -1,4 +1,4 @@
---SQL JOINS
+--SQL JOINS - constructing relationship between objects
 
 USE bookstore;
 
