@@ -1,0 +1,110 @@
+*/ 
+1. Retrieve data using the SQL CASE Statement
+2. Adding multiple conditions to a CASE statement
+3. Use the CASE Statement and SQL Aggregate Functions to retrieve data
+4. Use the CASE Statement and SQL Joins to retrieve data
+5. Retrieve data using the CASE Statement together with SQL Aggregate Functions and Joins
+6. Transpose data using the CASE clause
+/* 
+###############################################################
+###############################################################
+-- SQL CASE Statements
+###############################################################
+###############################################################
+
+
+#############################
+-- Task One: The SQL CASE Statement
+-- In this task, we will learn how to write a conditional
+-- statement using a single CASE clause
+#############################
+
+-- 1.1: Retrieve all the data in the employees table
+SELECT * FROM employees;
+
+-- 1.2: Change M to Male and F to Female in the employees table
+SELECT emp_no, first_name, last_name,
+CASE 
+	WHEN  gender = 'M' THEN 'Male'
+	ELSE 'Female'
+END
+FROM employees;
+
+
+-- 1.3: This gives the same result as 1.2
+SELECT emp_no, first_name, last_name,
+CASE 
+	WHEN  gender = 'M' THEN 'Male'
+	ELSE 'Female'
+END AS gender
+FROM employees;
+
+
+-- 1.4: This gives the same result as 1.2 & 1.3
+SELECT emp_no, first_name, last_name,
+CASE gender
+	WHEN 'M' THEN 'Male'
+	ELSE 'Female'
+END
+FROM employees;
+
+
+
+#############################
+-- Task Two: Adding multiple conditions to a CASE statement
+-- In this task, we will learn how to add multiple conditions to a 
+-- CASE statement
+#############################
+
+-- 2.1: Retrieve all the data in the customers table
+SELECT * FROM customers;
+
+-- 2.2: Create a column called Age_Category that returns Young for ages less than 30,
+-- Aged for ages greater than 60, and Middle Aged otherwise
+SELECT *,
+CASE 
+	WHEN age < 30 THEN 'Young'
+	WHEN age > 60 THEN 'Aged'
+	ELSE 'Middle Aged'
+END AS Age_Category
+FROM customers;
+
+-- 2.3: Retrieve a list of the number of employees that were employed 
+--before 1990, between 1990 and 1995, and after 1995
+SELECT * FROM employees
+
+SELECT emp_no, hire_date, EXTRACT(YEAR FROM hire_date) AS Year,
+CASE
+	WHEN EXTRACT(YEAR FROM hire_date) < '1990' THEN 'Employed before 1990'
+	WHEN EXTRACT(YEAR FROM hire_date) >= '1990' AND EXTRACT(YEAR FROM hire_date) <= '1995' THEN 'Employed between 1990 and 1995'
+	ELSE 'Employed After 1995'
+END AS emp_date
+FROM employees;
+
+
+#############################
+-- Task Three: The CASE Statement and Aggregate Functions
+-- In this task, we will see how to use the CASE clause and
+-- SQL aggregate functions to retrieve data
+#############################
+
+-- 3.1: Retrieve the average salary of all employees
+SELECT * FROM salaries;
+
+SELECT emp_no, AVG(salary)
+FROM salaries
+GROUP BY emp_no
+ORDER BY AVG(salary) DESC;
+
+-- 3.2: Retrieve a list of the average salary of employees. If the average salary is more than
+-- 80000, return Paid Well. If the average salary is less than 80000, return Underpaid,
+-- otherwise, return Unpaid
+SELECT emp_no, AVG(salary),
+CASE 
+	WHEN AVG(salary) > 80000 THEN 'Paid Well'
+	WHEN AVG(salary) < 80000 THEN 'Underpaid'
+	ELSE 'Unpaid'
+END
+FROM salaries
+GROUP BY emp_no
+ORDER BY AVG(salary) DESC;
