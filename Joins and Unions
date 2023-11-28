@@ -1,4 +1,9 @@
 --SQL JOINS - constructing relationship between objects or combine two or more records from different tables.
+Task 1: inner join.
+Task 2: left join.
+Task 3: right join.
+Task 4: create a self join and cross join.
+Task 5: union and union all.
 
 USE bookstore;
 
