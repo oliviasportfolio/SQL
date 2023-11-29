@@ -99,12 +99,43 @@ ORDER BY AVG(salary) DESC;
 -- 3.2: Retrieve a list of the average salary of employees. If the average salary is more than
 -- 80000, return Paid Well. If the average salary is less than 80000, return Underpaid,
 -- otherwise, return Unpaid
-SELECT emp_no, AVG(salary),
+SELECT emp_no, ROUND(AVG(salary),2),
 CASE 
 	WHEN AVG(salary) > 80000 THEN 'Paid Well'
 	WHEN AVG(salary) < 80000 THEN 'Underpaid'
 	ELSE 'Unpaid'
-END
+END AS salary_category
 FROM salaries
 GROUP BY emp_no
 ORDER BY AVG(salary) DESC;
+
+-- 3.3: Retrieve a list of the average salary of employees. If the average salary is more than
+-- 80000 but less than 100000, return Paid Well. If the average salary is less than 80000, 
+-- return Underpaid, otherwise, return Manager
+SELECT emp_no, ROUND(AVG(salary),2),
+CASE 
+	WHEN AVG(salary) > 80000 AND AVG(salary) <100000 THEN 'Paid Well'
+	WHEN AVG(salary) < 80000 THEN 'Underpaid'
+	ELSE 'Manager'
+END AS salary_category
+FROM salaries
+GROUP BY emp_no
+ORDER BY AVG(salary) DESC;
+
+
+-- 3.4: Count the number of employees in each salary category
+SELECT a.salary_category, COUNT(*)
+FROM 
+	(
+	SELECT emp_no, ROUND(AVG(salary),2),
+	CASE 
+		WHEN AVG(salary) > 80000 AND AVG(salary) <100000 THEN 'Paid Well'
+		WHEN AVG(salary) < 80000 THEN 'Underpaid'
+		ELSE 'Manager'
+	END AS salary_category
+	FROM salaries
+	GROUP BY emp_no
+	ORDER BY AVG(salary) DESC
+) a
+GROUP BY a.salary_category
+;
