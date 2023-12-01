@@ -3,31 +3,17 @@
 -- Mastering SQL Joins in PostgreSQL
 ##########################################################
 ##########################################################
-Task 1: Getting Started
-Retrieve all data from the departments_dup and dept_manager_dup tables
+Task 1: Getting Started - Retrieve all data from the departments_dup and dept_manager_dup tables
+Task 2: INNER JOIN - Retrieve desired result set from tables in the database using INNER JOIN
+Task 3: Duplicate Records - Retrieve desired result set from tables with duplicate records in the database using INNER JOIN
+Task 4: LEFT JOIN - Retrieve desired result set from tables in the database using LEFT JOIN
+Task 5: RIGHT JOIN - Retrieve desired result set from tables in the database using RIGHT JOIN
+Task 6: Join - used together with WHERE clause 
+- Retrieve desired result set from tables in the database using INNER JOIN together with the WHERE clause
+- Retrieve desired result set from tables in the database using LEFT JOIN together with the WHERE clause
 
-Task 2: INNER JOIN
-Retrieve desired result set from tables in the database using INNER JOIN
-
-Task 3: Duplicate Records
-Retrieve desired result set from tables with duplicate records in the database using INNER JOIN
-
-Task 4: LEFT JOIN
-Retrieve desired result set from tables in the database using LEFT JOIN
-
-Task 5: RIGHT JOIN
-Retrieve desired result set from tables in the database using RIGHT JOIN
-
-Task 6: Join used together with WHERE clause
-Retrieve desired result set from tables in the database using INNER JOIN together with the WHERE clause
-
-Retrieve desired result set from tables in the database using LEFT JOIN together with the WHERE clause
-
-Task 7: Using Aggregate Functions with Joins    
-Retrieve desired result set from tables in the database using INNER JOIN together with aggregate functions
-
-Task 8: Join more than Two Tables in SQL  
-Join more than two tables in SQL using INNER JOIN
+Task 7: Using Aggregate Functions with Joins - Retrieve desired result set from tables in the database using INNER JOIN together with aggregate functions
+Task 8: Join more than Two Tables in SQL - Join more than two tables in SQL using INNER JOIN
 
 #############################
 -- Task One: Getting Started
