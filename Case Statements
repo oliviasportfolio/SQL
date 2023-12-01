@@ -139,3 +139,183 @@ FROM
 ) a
 GROUP BY a.salary_category
 ;
+
+
+#############################
+-- Task Four: The CASE Statement and SQL Jons
+-- In this task, we will see how to use the CASE clause and
+-- SQL joins to retrieve data
+#############################
+
+-- 4.1: Retrieve all the data from the employees and dept_manager tables
+SELECT * FROM employees
+ORDER BY emp_no DESC;
+
+SELECT * From dept_manager;
+
+-- 4.2: Join all the records in the employees table to dept_manager table
+-- you can see the dm.emp_no will occasionally return null under manager emp_no because it cannot find a matching record
+SELECT e.emp_no, dm.emp_no, e.first_name, e.last_name
+FROM employees e
+LEFT JOIN dept_manager dm 
+ON e.emp_no = dm.emp_no
+ORDER BY dm.emp_no;
+
+-- 4.3: Join all the records in the employees table to the dept_manager table
+-- where the employee number is greater than 109990
+SELECT e.emp_no, dm.emp_no, e.first_name, e.last_name
+FROM employees e
+LEFT JOIN dept_manager dm 
+ON e.emp_no = dm.emp_no
+WHERE e.emp_no > 109990
+ORDER BY dm.emp_no;
+
+-- 4.4: Obtain a result set containing the employee number, first name, and last name
+-- of all employees. Create a 4th column in the query indicating whether this
+-- employeee is also a manager, according to the data in the
+-- dept_manager table, or a regular employee
+
+SELECT e.emp_no, e.first_name, e.last_name,
+CASE
+	WHEN dm.emp_no IS NOT NULL THEN 'Manager'
+	ELSE 'Employee'
+END AS is_manager
+FROM employees e
+LEFT JOIN dept_manager dm 
+ON e.emp_no = dm.emp_no
+ORDER BY dm.emp_no;
+
+-- 4.5: Obain a result set containing the employee number, first name, and last name
+-- of all employees with a number greater than '109990'. Create a 4th column in the query, 
+-- indicating whether this employee is also a manager, according to the data in the 
+-- dept_manager table, or a regular employee
+
+SELECT e.emp_no, e.first_name, e.last_name,
+CASE
+	WHEN dm.emp_no IS NOT NULL THEN 'Manager'
+	ELSE 'Employee'
+END AS is_manager
+FROM employees e
+LEFT JOIN dept_manager dm 
+ON e.emp_no = dm.emp_no
+WHERE e.emp_no > 109990
+ORDER BY dm.emp_no;
+
+
+#############################
+-- Task Five: The CASE Statement together with Aggregate Functions and Joins
+-- In this task, we will see how to use the CASE clause and
+-- SQL joins to retrieve data
+#############################
+
+-- 5.1: Retrieve all the data from the employees and salaries tables
+SELECT * FROM employees;
+SELECT * FROM salaries;
+
+-- 5.2: Retrieve a list of all salaries earned by an employee
+SELECT e.emp_no, e.first_name, e.last_name, s.salary
+FROM employees e
+INNER JOIN salaries s
+ON e.emp_no = s.emp_no;
+
+
+/* 5.3: Retrieve a list of employee number, first name and last name.
+Add a column called 'saary difference' which is the difference beteween the employee's 
+maximum and minumu salary. Also, add a column called 'salary_increase', which returns 'Salary 
+was raised by more than $30,000' if the difference is more than $30,000,
+'Salary was raised by more than $20,000 but less than $30,000', if the difference is between 
+$20,000 and $30,000, 'Salary was raised by less than $20,000' if the difference is less than $20,000 */
+
+SELECT e.emp_no, e.first_name, e.last_name, MAX(s.salary) - MIN(s.salary) AS salary_difference, 
+CASE 
+	WHEN MAX(s.salary) - MIN(s.salary) > 30000 THEN 'Salary was raised by more than $30,000'
+	WHEN MAX(s.salary) - MIN(s.salary) BETWEEN 20000 AND 30000 THEN 'Salary was raised by more than $20,000 but less than $30,000'
+	ELSE 'Salary was raised by less than $20,000'
+END AS 'salary_increase
+FROM employees e
+INNER JOIN salaries s
+ON e.emp_no = s.emp_no
+GROUP BY e.emp_no, e.first_name, e.last_name;
+
+-- 5.4: Retrieve all the data from the employees and dept_emp tables
+SELECT * FROM employees;
+
+SELECT * FROM dept_emp;
+
+/* 5.5: Extract the employee number, first and last name of the first 100 employees, 
+and add a fourth column called "current_employee" saying "Is still employed",
+if the employee is still working in the company, or "Not an employee anymore", 
+if they are not working in the company.
+Hint: We will need data from both the 'employees' and 'dept_emp' table to solve this exercise
+In the data set, employees who are still current have the date 9999-01-01*/
+
+SELECT e.emp_no, e.first_name, e.last_name, de.to_date
+CASE
+	WHEN MAX(de.to_date) > CURRENT_DATE THEN 'Ist still employed'
+	ELSE 'Not an employee anymore'
+END AS current_employee
+FROM employees e
+INNER JOIN dept_emp de
+ON e.emp_no = de.emp_no
+GROUP BY  e.emp_no, e.first_name, e.last_name, de.to_date
+LIMIT 100;
+
+
+#############################
+-- Task Six: Transposing data using the CASE clause
+-- In this task, we will see how to use the CASE clause and
+-- transpose retrieved data
+#############################
+
+-- 6.1: Retrieve all the data from the slaes table
+SELECT * FROM sales;
+
+-- 6.2: Retrieve the count of the different profit_category from the sales table
+SELECT a.profit_category, COUNT(*)
+FROM
+(
+	SELECT order_line, profit
+	CASE 
+		WHEN profit < 0 THEN 'No Profit'
+		WHEN profit > 0 AND profit < 500 THEN 'Low Profit'
+		WHEN profit > 500 AND prfit < 1500 THEN 'Good Profit'
+		ELSE 'High Profit'
+	END AS profit_category
+	FROM Sales
+) a
+GROUP BY a.profit_category;
+
+-- 6.3: Transpose 6.2 above
+SELECT SUM(CASE WHEN profit < 0 THEN 1 ELSE 0 END) AS no_profit
+FROM sales;
+-- 	we see that this result matches the result for 'No Profit' in 6.2 so...
+
+SELECT SUM(CASE WHEN profit < 0 THEN 1 ELSE 0 END) AS no_profit,
+SUM (CASE WHEN profit > 0 AND profit < 500 THEN 1 ELSE 0 END) AS low_profit,
+SUM (CASE WHEN profit > 500 AND prfit < 1500 THEN 1 ELSE 0 END) AS good_profit,
+SUM (CASE WHEN profit > 1500THEN 1 ELSE 0 END) AS high_profit
+FROM sales;
+
+-- 6.4: Retrieve the number of employees in the first four departments in the dept_emp table
+SELECT * FROM dept_emp;
+
+SELECT dept_no, COUNT(*)
+FROM dept_emp
+WHERE dept_no IN ('d001', 'd002', 'd003', 'd004')
+GROUP BY dept_no
+ORDER BY dept_no;
+
+-- 6.5 Transpose 6.4
+SELECT SUM (CASE WHEN dept_no = 'd0001' THEN 1 ELSE 0 END) AS 'dept_one',
+SUM (CASE WHEN dept_no = 'd0002' THEN 1 ELSE 0 END) AS 'dept_two',
+SUM (CASE WHEN dept_no = 'd0003' THEN 1 ELSE 0 END) AS 'dept_three',
+SUM (CASE WHEN dept_no = 'd0004' THEN 1 ELSE 0 END) AS 'dept_four'
+FROM dept_emp;
+
+
+
+
+
+
+
+
